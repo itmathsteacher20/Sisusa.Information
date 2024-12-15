@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AssemblyName>Sisusa.Information</AssemblyName>
+        <RootNamespace>Sisusa.Information</RootNamespace>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageTags>Communication;Email;Tel;People;PIN</PackageTags>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <Copyright>2024 T_Dlamini</Copyright>
+        <Description>A collection of Value Objects for information about people and communication(Email, Tel, Address). Also includes Time ranges (Year, YearRange, DateRange) designed for private use </Description>
+        <Title>Information about people (Names, Eswatini PIN, Gender), Financial object (Money), Time objects (Year, YearRange, DateRange), Communication objects (EmailAddress, TelNumber, DetailedAddress, EswatiniTelNumber).</Title>
+        <Version>2.0.0</Version>
+        <RepositoryUrl>https://github.com/itmathsteacher20/Sisusa.Information</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageReleaseNotes>Added SA Pin, Luhn validator, removed implicit assignment on SwaziPin for a more streamlined experience</PackageReleaseNotes>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <None Update="README.md">
+        <Pack>True</Pack>
+        <PackagePath>\</PackagePath>
+      </None>
+    </ItemGroup>
+
+</Project>
