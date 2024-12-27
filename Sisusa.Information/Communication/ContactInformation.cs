@@ -31,12 +31,15 @@ namespace Sisusa.Information.Communication
             return false;
         }
 
-        public static bool operator ==(ContactInformation left, ContactInformation right)
+        public static bool operator ==(ContactInformation? left, ContactInformation right)
         {
+            if (left is null)
+                return right is null;
+
             return Equals(left, right);
         }
 
-        public static bool operator !=(ContactInformation left, ContactInformation right)
+        public static bool operator !=(ContactInformation? left, ContactInformation right)
         {
             return !Equals(left, right);
         }

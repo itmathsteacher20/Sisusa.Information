@@ -292,14 +292,14 @@ namespace Sisusa.Information.Identification
             return $"{DateOfBirth:yyMMdd}{(_pinParts.Gender):d4}{(ushort)CitizenshipStatus}{SerialNumber:d2}";
         }
 
-        public static bool operator ==(SAIdNumber a, SAIdNumber b)
+        public static bool operator ==(SAIdNumber? a, SAIdNumber b)
         {
             if (ReferenceEquals(a, b))
                 return true;
             return !ReferenceEquals(a, null) && a.Equals(b);
         }
 
-        public static bool operator !=(SAIdNumber a, SAIdNumber b)
+        public static bool operator !=(SAIdNumber? a, SAIdNumber b)
         {
             return !(a == b);
         }

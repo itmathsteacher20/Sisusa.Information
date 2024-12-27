@@ -10,16 +10,19 @@ This library provides a comprehensive set of classes for handling various inform
     Error Handling: Clear and informative exception handling for invalid input or unexpected scenarios.
 
 ### Core Classes:
-#### Time
+#### Time  
 
     Year: Represents a year with validation, comparison, and calculation capabilities.
     YearRange: Represents a range of years with inclusion checks and length calculations.
     DateRange: Represents a range of dates with inclusion checks and duration calculations.
+ [Detailed Documentation](Time/README.md)
 
 #### Identification (Eswatini & South Africa Specific)
-
     SwaziPin: Parses and validates Eswatini national identification numbers (PINs), extracting date of birth, gender, and serial number.
     SAIdNumber: Parses and validates South African national identification numbers, extracting date of birth, gender, citizenship status and checkusm.
+
+    [Detailed Documentation](Identification/README.md)
+
 #### Financial
 
     Money: Represents a monetary amount with a specific currency. Supports operations like addition, subtraction, multiplication, comparison, and conversion to decimal.
@@ -27,6 +30,8 @@ This library provides a comprehensive set of classes for handling various inform
     IMoneyConverter: Interface for converting money between currencies.
     DefaultMoneyConverter: A concrete implementation of IMoneyConverter that uses predefined conversion rates.
     LuhnChecksum: A simple implementation of the Luhn algorithm to validate numeric values (credit card numbers) using the Luhn algorithm.
+
+    [Detailed Documentation](Financial/README.md)
 
 #### Communication
 
@@ -36,6 +41,7 @@ This library provides a comprehensive set of classes for handling various inform
     DetailedAddress: Represents a detailed address with country, city, street, nearest landmark, and postal code.
     ContactInformation: Combines phone number, email address, and physical address into a single class.
 
+    [Detailed Documentation](Communication/README.md)
 ##### Usage:
 
 For a detailed usage guide, refer to the specific class documentation within the library. Here's a basic example:

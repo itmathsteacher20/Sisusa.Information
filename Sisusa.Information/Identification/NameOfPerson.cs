@@ -64,9 +64,10 @@ namespace Sisusa.Information.Identification
         /// <param name="first">The first <see cref="NameOfPerson"/> instance.</param>
         /// <param name="second">The second <see cref="NameOfPerson"/> instance.</param>
         /// <returns>True if the instances are equal; otherwise, false.</returns>
-        public static bool operator ==(NameOfPerson first, NameOfPerson second)
+        public static bool operator ==(NameOfPerson? first, NameOfPerson second)
         {
-            if (ReferenceEquals(first, null)) return false;
+            if (ReferenceEquals(first, null) || first is null) 
+                return ReferenceEquals(second, null) || second is null;
             
             return ReferenceEquals(first, second) || first.Equals(second);
         }
@@ -77,7 +78,7 @@ namespace Sisusa.Information.Identification
         /// <param name="first">The first <see cref="NameOfPerson"/> instance.</param>
         /// <param name="second">The second <see cref="NameOfPerson"/> instance.</param>
         /// <returns>True if the instances are not equal; otherwise, false.</returns>
-        public static bool operator !=(NameOfPerson first, NameOfPerson second)
+        public static bool operator !=(NameOfPerson? first, NameOfPerson second)
         {
             return !(first == second);
         }
