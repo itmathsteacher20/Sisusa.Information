@@ -1,10 +1,11 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Text.Json.Serialization;
 
 namespace Sisusa.Information.Communication
 {
     /// <summary>
     /// Represents an email address with user part and host part.
     /// </summary>
+    [JsonConverter(typeof(EmailAddressConverter))]
     public class EmailAddress
     {
         /// <summary>
@@ -15,12 +16,12 @@ namespace Sisusa.Information.Communication
         /// <summary>
         /// The user part of the email address i.e. the part before @.
         /// </summary>
-        public string UserName { get; private set; }
+        public string UserName { get; init; }
 
         /// <summary>
         /// The email provider - part after the @.
         /// </summary>
-        public string EmailHost { get; private set; }
+        public string EmailHost { get; init; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmailAddress"/> class.
@@ -31,6 +32,19 @@ namespace Sisusa.Information.Communication
         {
             UserName = userPart;
             EmailHost = domainName;
+        }
+
+        /// <summary>
+        /// Creates a new instance by parsing an existing email-string.
+        /// </summary>
+        /// <param name="email">The email address to wrap into an instance.</param>
+        /// <exception cref="ArgumentException">If given an empty or null string.</exception>
+        /// <exception cref="InvalidEmailAddressException">If given a non-email string.</exception>
+        public EmailAddress(string email)
+        {
+            var parsed = EmailAddress.Parse(email);
+            UserName = parsed.UserName;
+            EmailHost = parsed.EmailHost;
         }
 
         /// <summary>
@@ -66,7 +80,6 @@ namespace Sisusa.Information.Communication
         public override bool Equals(object? obj)
         {
             if (ReferenceEquals(this, obj)) return true;
-            if (ReferenceEquals(null, obj)) return false;
 
             if (obj is EmailAddress emailAddress)
             {
@@ -162,143 +175,6 @@ namespace Sisusa.Information.Communication
                 EmailStringValidator.Validate($"{_userName}@{_emailHost}");
                 return new EmailAddress(_userName, _emailHost);
             }
-        }
-    }
-
-    /// <summary>
-    /// Provides methods for validating email address strings.
-    /// </summary>
-    public static class EmailStringValidator
-    {
-        private static readonly Regex EmailFormat = new("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
-
-        /// <summary>
-        /// Validates the specified email address string.
-        /// </summary>
-        /// <param name="emailAddress">The email address string to validate.</param>
-        /// <exception cref="InvalidEmailAddressException">Thrown when the email address is invalid.</exception>
-        public static void Validate(string emailAddress)
-        {
-            ThrowIfNullOrEmpty(emailAddress, "Email address to validate cannot be empty.");
-            ThrowIfContainsInvalidCharacters(emailAddress, "Given string is not a valid email address (for this application).");
-
-            var noOfAtChars = emailAddress.Count(c => c == '@');
-
-            if (noOfAtChars is 0 or > 1)
-                throw new InvalidEmailAddressException(
-                    "Email address can have only one @ character separating localPart from domainPart.");
-
-            char lastChar = char.MinValue;
-            foreach (char c in emailAddress)
-            {
-                if (c == '.' && lastChar == '.')
-                {
-                    throw new InvalidEmailAddressException("Email address cannot contain consecutive dots.");
-                }
-                lastChar = c;
-            }
-
-            if (!EmailFormat.IsMatch(emailAddress))
-                throw new InvalidEmailAddressException();
-        }
-
-        private static void ThrowIfNullOrEmpty(string value, string message)
-        {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                throw new InvalidEmailAddressException(message);
-            }
-        }
-
-        private static void ThrowIfContainsInvalidCharacters(string value, string message)
-        {
-            if (value.StartsWith('.') || value.EndsWith('.'))
-            {
-                throw new InvalidEmailAddressException(message);
-            }
-
-            if (value.StartsWith('@') || value.EndsWith('@'))
-            {
-                throw new InvalidEmailAddressException(message);
-            }
-
-            if (value.Contains(' '))
-            {
-                throw new InvalidEmailAddressException(message);
-            }
-
-            if (value.Contains('"'))
-            {
-                throw new InvalidEmailAddressException(message);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Provides methods for parsing email address strings.
-    /// </summary>
-    public static class EmailAddressParser
-    {
-        /// <summary>
-        /// Parses the specified email address string into an <see cref="EmailAddress"/> object.
-        /// </summary>
-        /// <param name="emailAddress">The email address string to parse.</param>
-        /// <returns>An <see cref="EmailAddress"/> object.</returns>
-        /// <exception cref="InvalidEmailAddressException">Thrown when the email address is invalid.</exception>
-        public static EmailAddress Parse(string emailAddress)
-        {
-            EmailStringValidator.Validate(emailAddress);
-            var emailParts = SplitToParts(emailAddress);
-            return EmailAddress.BuildAddress
-                .WithUserName(emailParts.localPart)
-                .OnHost(emailParts.domainPart)
-                .TryBuild();
-        }
-
-        private static (string localPart, string domainPart) SplitToParts(string emailAddress)
-        {
-            var emailParts = emailAddress.Split('@');
-            return (emailParts[0], emailParts[1]);
-        }
-    }
-    /// <summary>
-    /// Exception thrown when an email address is invalid.
-    /// </summary>
-    public sealed class InvalidEmailAddressException : Exception
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="InvalidEmailAddressException"/> class.
-        /// </summary>
-        /// <param name="message">The exception message.</param>
-        public InvalidEmailAddressException(string message = "Provided string does not appear to be a valid email address.")
-            : base(message)
-        {
-        }
-    }
-    /// <summary>
-    /// Exception thrown when an email provider format is invalid.
-    /// </summary>
-    public sealed class InvalidEmailProviderFormatException : Exception
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="InvalidEmailProviderFormatException"/> class.
-        /// </summary>
-        public InvalidEmailProviderFormatException()
-            : base("Specified email provider (or hosting service) looks invalid.")
-        {
-        }
-    }
-    /// <summary>
-    /// Exception thrown when an email username is invalid.
-    /// </summary>
-    public sealed class InvalidEmailUsernameException : Exception
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="InvalidEmailUsernameException"/> class.
-        /// </summary>
-        public InvalidEmailUsernameException()
-            : base("Invalid email format - user part contains invalid characters.")
-        {
         }
     }
 }

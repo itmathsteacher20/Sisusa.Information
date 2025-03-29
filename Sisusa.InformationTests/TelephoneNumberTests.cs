@@ -11,22 +11,21 @@ namespace Sisusa.People.Tests
         [TestMethod]
         public void ToString_ReturnsCorrectFormat()
         {
-            var telephone = TelephoneNumber.FromCountry(1).HavingPhoneNumber(123456789);
-            
+            var telephone = TelephoneNumber.ForCountry(1).WithPhoneNumber(123456789);
             Assert.AreEqual("+1123456789", telephone.ToString());
         }
 
         [TestMethod]
         public void GetInInternationalNumberFormat_ReturnsCorrectFormat()
         {
-            var telephone = TelephoneNumber.FromCountry(44).HavingPhoneNumber(123456789);
+            var telephone = TelephoneNumber.ForCountry(44).WithPhoneNumber(123456789);
             Assert.AreEqual("+44123456789", telephone.GetInInternationalNumberFormat());
         }
 
         [TestMethod]
         public void GetCallLink_ReturnsCorrectTelLink()
         {
-            var telephone = TelephoneNumber.FromCountry(91).HavingPhoneNumber(987654321);
+            var telephone = TelephoneNumber.ForCountry(91).WithPhoneNumber(987654321);
             Assert.AreEqual("tel:+91987654321", telephone.GetCallLink());
         }
 
@@ -53,32 +52,34 @@ namespace Sisusa.People.Tests
         {
             Assert.ThrowsException<InvalidPhoneNumberPhoneNumberFormatException>(() =>
             {
-                _ = TelephoneNumber.FromCountry(1125).HavingPhoneNumber(1290123);
+                _ = TelephoneNumber.ForCountry(1125).WithPhoneNumber(1290123);
             });
         }
 
         [TestMethod]
         public void Constructor_EmergencyNumber_DoesNotThrowException()
         {
-            var telephone = TelephoneNumber.FromCountry(1).AsEmergencyNumber(911);
-            Assert.IsTrue(telephone.IsEmergency);
+            var telephone = new EmergencyTelephoneNumber(112);
+            telephone.GetInInternationalNumberFormat();
+            Assert.AreEqual(112, telephone.GetLongPhoneNumber());
         }
 
         [TestMethod]
         public void Equals_SamePhoneNumber_ReturnsTrue()
         {
-            var tel1 = TelephoneNumber.FromCountry(1).HavingPhoneNumber(123456789);
-            var tel2 = TelephoneNumber.FromCountry(1).HavingPhoneNumber(123456789);
+            var tel1 = TelephoneNumber.ForCountry(1).WithPhoneNumber(123456789);
+            var tel2 = TelephoneNumber.ForCountry(1).WithPhoneNumber(123456789);
 
             Assert.AreEqual(tel1, tel2);
             Assert.IsTrue(tel1.Equals(tel2));
+            Assert.IsTrue(tel1 == tel2);
         }
 
         [TestMethod]
         public void Equals_DifferentPhoneNumbers_ReturnsFalse()
         {
-            var tel1 = TelephoneNumber.FromCountry(1).HavingPhoneNumber(123456789);
-            var tel2 = TelephoneNumber.FromCountry(44).HavingPhoneNumber(987654321);
+            var tel1 = TelephoneNumber.ForCountry(1).WithPhoneNumber(123456789);
+            var tel2 = TelephoneNumber.ForCountry(44).WithPhoneNumber(987654321);
 
             Assert.AreNotEqual(tel1, tel2);
             Assert.IsFalse(tel1.Equals(tel2));
@@ -87,8 +88,8 @@ namespace Sisusa.People.Tests
         [TestMethod]
         public void HashCode_SamePhoneNumber_HasSameHashCode()
         {
-            var tel1 = TelephoneNumber.FromCountry(1).HavingPhoneNumber(123456789);
-            var tel2 = TelephoneNumber.FromCountry(1).HavingPhoneNumber(123456789);
+            var tel1 = TelephoneNumber.ForCountry(1).WithPhoneNumber(123456789);
+            var tel2 = TelephoneNumber.ForCountry(1).WithPhoneNumber(123456789);
 
             Assert.AreEqual(tel1.GetHashCode(), tel2.GetHashCode());
         }
@@ -96,8 +97,8 @@ namespace Sisusa.People.Tests
         [TestMethod]
         public void OperatorEquality_SamePhoneNumber_ReturnsTrue()
         {
-            var tel1 = TelephoneNumber.FromCountry(1).HavingPhoneNumber(123456789);
-            var tel2 = TelephoneNumber.FromCountry(1).HavingPhoneNumber(123456789);
+            var tel1 = TelephoneNumber.ForCountry(1).WithPhoneNumber(123456789);
+            var tel2 = TelephoneNumber.ForCountry(1).WithPhoneNumber(123456789);
 
             Assert.IsTrue(tel1 == tel2);
         }
@@ -105,8 +106,8 @@ namespace Sisusa.People.Tests
         [TestMethod]
         public void OperatorInequality_DifferentPhoneNumbers_ReturnsTrue()
         {
-            var tel1 = TelephoneNumber.FromCountry(1).HavingPhoneNumber(123456789);
-            var tel2 = TelephoneNumber.FromCountry(44).HavingPhoneNumber(987654321);
+            var tel1 = TelephoneNumber.ForCountry(1).WithPhoneNumber(123456789);
+            var tel2 = TelephoneNumber.ForCountry(44).WithPhoneNumber(987654321);
 
             Assert.IsTrue(tel1 != tel2);
         }
@@ -114,8 +115,8 @@ namespace Sisusa.People.Tests
         [TestMethod]
         public void TelNumberBuilder_CreatesValidTelephoneNumber()
         {
-            var builder = TelephoneNumber.FromCountry(1);
-            var telephone = builder.HavingPhoneNumber(123456789);
+            var builder = TelephoneNumber.ForCountry(1);
+            var telephone = builder.WithPhoneNumber(123456789);
 
             Assert.AreEqual("+1123456789", telephone.ToString());
         }
@@ -125,8 +126,8 @@ namespace Sisusa.People.Tests
         {
             Assert.ThrowsException<InvalidPhoneNumberPhoneNumberFormatException>(() =>
             {
-                var builder = TelephoneNumber.FromCountry(0);
-                _ = builder.HavingPhoneNumber(123456789);
+                var builder = TelephoneNumber.ForCountry(0);
+                _ = builder.WithPhoneNumber(123456789);
             });
         }
 
@@ -135,13 +136,13 @@ namespace Sisusa.People.Tests
         {
             Assert.ThrowsException<InvalidPhoneNumberPhoneNumberFormatException>(() =>
             {
-                var builder = TelephoneNumber.FromCountry(1045); //bad coutnry
-                _ = builder.HavingPhoneNumber(12345678); // Too long
+                var builder = TelephoneNumber.ForCountry(1045); //bad coutnry
+                _ = builder.WithPhoneNumber(12345678); // Too long
             });
         }
 
         // Helper method to access the protected IsValidFormat
-        private static bool TestIsValidFormat(int country, long phoneNumber)
+        private static bool TestIsValidFormat(uint country, ulong phoneNumber)
         {
             var method = typeof(TelephoneNumber)
                 .GetMethod("IsValidFormat", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);

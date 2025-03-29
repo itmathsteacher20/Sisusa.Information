@@ -1,35 +1,38 @@
-﻿namespace Sisusa.Information.Communication
+﻿using System.Text.Json.Serialization;
+
+namespace Sisusa.Information.Communication
 {
     /// <summary>
     /// Represents a telephone number with country code and phone number.
     /// </summary>
-    public class TelephoneNumber : IEquatable<TelephoneNumber>
+    public class TelephoneNumber : TelephoneNumberBase, IEquatable<TelephoneNumber>
     {
         /// <summary>
         /// Gets the country code of the telephone number.
         /// </summary>
-        public int CountryCode { get; init; }
+        public uint CountryCode { get; init; }
 
         /// <summary>
         /// Gets the phone number.
         /// </summary>
-        public long PhoneNumber { get; init; }
-
-        /// <summary>
-        /// Gets a value indicating whether the number is an emergency number.
-        /// </summary>
-        public bool IsEmergency { get; protected set; }
+        public ulong PhoneNumber { get; init; }
+        
 
         /// <summary>
         /// Represents a null telephone number.
         /// </summary>
-        public static readonly TelephoneNumber Null = new(1, 112, true);
+        public static readonly TelephoneNumber Null = new(0, 0);
+
+        /// <summary>
+        /// For cases where a tel number is not provided.
+        /// </summary>
+        public static readonly TelephoneNumber None = Null;
 
         /// <summary>
         /// Returns the telephone number in international format.
         /// </summary>
         /// <returns>The telephone number in international format.</returns>
-        public string GetInInternationalNumberFormat()
+        public override string GetInInternationalNumberFormat()
         {
             return ToString();
         }
@@ -38,7 +41,7 @@
         /// Returns a call link for the telephone number.
         /// </summary>
         /// <returns>A call link for the telephone number.</returns>
-        public string GetCallLink()
+        public override string GetCallLink()
         {
             return $"tel:{GetInInternationalNumberFormat()}";
         }
@@ -49,17 +52,18 @@
         /// <param name="country">The country code.</param>
         /// <param name="phoneNumber">The phone number.</param>
         /// <returns>True if the format is valid; otherwise, false.</returns>
-        protected static bool IsValidFormat(int country, long phoneNumber)
+        protected static bool IsValidFormat(uint country, ulong phoneNumber)
         {
-            if (country < 1 || country > 999) return false;
+            if (country is < 1 or > 999) return false;
             return phoneNumber.ToString().TrimStart('+').Length <= 12;
         }
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)
         {
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj is null) return false;
+            if (ReferenceEquals(this, obj))
+                return true;
+            //if (obj is null) return false;
             if (obj is TelephoneNumber tel)
             {
                 return tel.CountryCode == CountryCode &&
@@ -71,8 +75,12 @@
         /// <inheritdoc/>
         public bool Equals(TelephoneNumber? other)
         {
-            if (ReferenceEquals(this, other)) return true;
-            if (other is null) return false;
+            if (ReferenceEquals(this, other)) 
+                return true;
+            
+            if (other is null)
+                return false;
+            
             return other.CountryCode == CountryCode &&
                    other.PhoneNumber == PhoneNumber;
         }
@@ -89,11 +97,20 @@
             return $"+{CountryCode}{PhoneNumber}";
         }
 
-        /// <summary>
-        /// Combines the country code and phone number into a single long value.
-        /// </summary>
-        /// <returns>The combined long value of the country code and phone number.</returns>
-        public long GetLongPhoneNumber()
+        public override string ToPrettyString()
+        {
+            var parts = new List<string>();
+            var phoneString = PhoneNumber.ToString();
+            for (var i = 0; i < phoneString.Length; i+=4)
+            {
+                int length = Math.Min(4, phoneString.Length - i);
+                var part = phoneString.Substring(i, length);
+                parts.Add(part);
+            }
+            return $"+{CountryCode} {string.Join(" ", parts)}";
+        }
+        
+        public override long GetLongPhoneNumber()
         {
             var combined = $"{CountryCode:d3}{PhoneNumber}";
             return long.Parse(combined);
@@ -124,40 +141,35 @@
             return !(a == b);
         }
 
+        
         /// <summary>
-        /// Initializes a new instance of the <see cref="TelephoneNumber"/> class.
+        /// Creates a new telephone number instance from the given params.
+        /// Expects phone number to follow the international phone number standard.
         /// </summary>
-        /// <param name="countryCode">The country code.</param>
-        /// <param name="phoneNumber">The phone number.</param>
-        /// <param name="isEmergency">Indicates whether the number is an emergency number.</param>
-        /// <exception cref="InvalidPhoneNumberPhoneNumberFormatException">Thrown when the phone number format is invalid.</exception>
-        protected TelephoneNumber(int countryCode, long phoneNumber, bool isEmergency = false)
+        /// <param name="countryCode">The country code for the phone number.(Identifies the country in which number is registered)</param>
+        /// <param name="phoneNumber">The phone number which combines the area code and subscriber number(where applicable)</param>
+        public TelephoneNumber(uint countryCode, ulong phoneNumber)
         {
+            ArgumentOutOfRangeException.ThrowIfLessThan(phoneNumber, countryCode);
             CountryCode = countryCode;
-            IsEmergency = isEmergency;
-            if (isEmergency)
-            {
-                PhoneNumber = phoneNumber;
-            }
-
-            if (!IsValidFormat(countryCode, phoneNumber) && !IsEmergency)
+            if (!IsValidFormat(countryCode, phoneNumber))
             {
                 throw new InvalidPhoneNumberPhoneNumberFormatException(nameof(phoneNumber));
             }
-            else
-            {
-                PhoneNumber = phoneNumber;
-            }
+            PhoneNumber = phoneNumber;
         }
+        
+        [JsonConstructor]
+        private TelephoneNumber(uint countryCode, ulong phoneNumber, bool _):this(countryCode, phoneNumber){}
 
         /// <summary>
         /// Creates a <see cref="TelNumberBuilder"/> for the specified country code.
         /// </summary>
         /// <param name="countryCode">The country code.</param>
         /// <returns>A <see cref="TelNumberBuilder"/> instance.</returns>
-        public static TelNumberBuilder FromCountry(int countryCode)
+        public static TelNumberBuilder ForCountry(uint countryCode)
         {
-            return new(countryCode);
+            return new TelNumberBuilder(countryCode);
         }
 
         /// <summary>
@@ -165,35 +177,25 @@
         /// </summary>
         public class TelNumberBuilder
         {
-            private readonly int _country;
+            private readonly uint _country;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="TelNumberBuilder"/> class.
             /// </summary>
             /// <param name="countryCode">The country code.</param>
-            public TelNumberBuilder(int countryCode)
+            public TelNumberBuilder(uint countryCode)
             {
                 _country = countryCode;
             }
-
-            /// <summary>
-            /// Creates an emergency telephone number.
-            /// </summary>
-            /// <param name="number">The emergency number.</param>
-            /// <returns>A <see cref="TelephoneNumber"/> instance.</returns>
-            public TelephoneNumber AsEmergencyNumber(int number)
-            {
-                return new(_country, number, true);
-            }
-
+            
             /// <summary>
             /// Creates a telephone number with the specified phone number.
             /// </summary>
             /// <param name="phoneNumber">The phone number.</param>
             /// <returns>A <see cref="TelephoneNumber"/> instance.</returns>
-            public TelephoneNumber HavingPhoneNumber(long phoneNumber)
+            public TelephoneNumber WithPhoneNumber(ulong phoneNumber)
             {
-                return new(_country, phoneNumber);
+                return new TelephoneNumber(_country, phoneNumber);
             }
         }
     }

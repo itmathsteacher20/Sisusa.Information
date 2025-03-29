@@ -1,12 +1,20 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AObject_002ECoreCLR_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003FAppData_003FRoaming_003FJetBrains_003FRider2024_002E3_003Fresharper_002Dhost_003FSourcesCache_003F1bdc36dd4183e28bfc782d741e368f6faf4ad8397bd232ec65613e2373e_003FObject_002ECoreCLR_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=d2232a58_002D359c_002D4f19_002Dbebd_002Dc03e4503523d/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from SAIdNumberTests.cs" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;ProjectFile&gt;B5B11416-36A2-473F-BB88-E4DFF4C75867/f:SAIdNumberTests.cs&lt;/ProjectFile&gt;&#xD;
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003ARuntimeType_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003FAppData_003FRoaming_003FJetBrains_003FRider2024_002E3_003Fresharper_002Dhost_003FSourcesCache_003F3791ade316feeb2be344648da3c7d31719ff492f7733b643bf8c24d7629883_003FRuntimeType_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=d2232a58_002D359c_002D4f19_002Dbebd_002Dc03e4503523d/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from SAIdNumberTests.cs" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Or&gt;&#xD;
+    &lt;ProjectFile&gt;B5B11416-36A2-473F-BB88-E4DFF4C75867/f:SAIdNumberTests.cs&lt;/ProjectFile&gt;&#xD;
+    &lt;TestAncestor&gt;&#xD;
+      &lt;TestId&gt;MSTest::B5B11416-36A2-473F-BB88-E4DFF4C75867::net8.0::Sisusa.People.Tests.TelephoneNumberTests&lt;/TestId&gt;&#xD;
+    &lt;/TestAncestor&gt;&#xD;
+  &lt;/Or&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=fb3664b5_002D2f8e_002D4c3f_002Da011_002D344350a66ccc/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="SAIdNumberTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=fb3664b5_002D2f8e_002D4c3f_002Da011_002D344350a66ccc/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="SAIdNumberTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Or&gt;&#xD;
     &lt;TestAncestor&gt;&#xD;
       &lt;TestId&gt;MSTest::B5B11416-36A2-473F-BB88-E4DFF4C75867::net8.0::Sisusa.Information.Tests.SAIdNumberTests&lt;/TestId&gt;&#xD;
+      &lt;TestId&gt;MSTest::B5B11416-36A2-473F-BB88-E4DFF4C75867::net8.0::Sisusa.People.Tests.TelephoneNumberTests.IsValidFormat_ValidPhoneNumber_ReturnsTrue&lt;/TestId&gt;&#xD;
+      &lt;TestId&gt;MSTest::B5B11416-36A2-473F-BB88-E4DFF4C75867::net8.0::Sisusa.People.Tests.TelephoneNumberTests.IsValidFormat_InvalidCountryCode_ReturnsFalse&lt;/TestId&gt;&#xD;
     &lt;/TestAncestor&gt;&#xD;
     &lt;ProjectFile&gt;B5B11416-36A2-473F-BB88-E4DFF4C75867/f:SwaziPinTests.cs&lt;/ProjectFile&gt;&#xD;
   &lt;/Or&gt;&#xD;

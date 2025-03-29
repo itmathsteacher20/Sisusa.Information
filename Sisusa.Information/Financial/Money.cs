@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Sisusa.Information.Financial;
 
 
@@ -17,6 +19,12 @@ public class Money(int cents, Currency currency = Currency.ZAR) : IEquatable<Mon
     /// Gets the currency of the money.
     /// </summary>
     public Currency Currency { get; init; } = currency;
+    
+    [JsonConstructor]
+    private Money(int cents, Currency currency, bool _):this(cents, currency) {}
+    
+    [JsonConstructor]
+    private Money(int cents, bool _):this(cents, Currency.ZAR) { }
 
     private static readonly Money MinValue = new(0, Currency.ZAR);
 
@@ -76,6 +84,17 @@ public class Money(int cents, Currency currency = Currency.ZAR) : IEquatable<Mon
     {
         var increment = (int)Math.Round(InCents * percent / 100);
         return new(InCents + increment, Currency);
+    }
+
+    /// <summary>
+    /// Increase the monetary value by the given percentage.
+    /// </summary>
+    /// <param name="percent">The whole number percentage to increase by. Assumes all values are in X% form (e.g. 15 for 15%) </param>
+    /// <returns></returns>
+    public Money IncreaseByPercent(double percent)
+    {
+        var increment = (int)Math.Round(InCents * percent / 100);
+        return new Money(InCents + increment, Currency);
     }
 
     /// <summary>

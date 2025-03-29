@@ -20,8 +20,8 @@ This library provides a comprehensive set of classes for handling various inform
 #### Identification (Eswatini & South Africa Specific)
     SwaziPin: Parses and validates Eswatini national identification numbers (PINs), extracting date of birth, gender, and serial number.
     SAIdNumber: Parses and validates South African national identification numbers, extracting date of birth, gender, citizenship status and checkusm.
-
-    [Detailed Documentation](Identification/README.md)
+   
+[Detailed Documentation](Identification/README.md)
 
 #### Financial
 
@@ -31,7 +31,7 @@ This library provides a comprehensive set of classes for handling various inform
     DefaultMoneyConverter: A concrete implementation of IMoneyConverter that uses predefined conversion rates.
     LuhnChecksum: A simple implementation of the Luhn algorithm to validate numeric values (credit card numbers) using the Luhn algorithm.
 
-    [Detailed Documentation](Financial/README.md)
+[Detailed Documentation](Financial/README.md)
 
 #### Communication
 
@@ -41,7 +41,7 @@ This library provides a comprehensive set of classes for handling various inform
     DetailedAddress: Represents a detailed address with country, city, street, nearest landmark, and postal code.
     ContactInformation: Combines phone number, email address, and physical address into a single class.
 
-    [Detailed Documentation](Communication/README.md)
+[Detailed Documentation](Communication/README.md)
 ##### Usage:
 
 For a detailed usage guide, refer to the specific class documentation within the library. Here's a basic example:
@@ -76,7 +76,7 @@ Console.WriteLine($"Increased amount: {increasedAmount}");
 
 // Create a contact information object
 ContactInformation contact = ContactInformation.GetBuilder()
-.WithPhoneNumber(TelephoneNumber.FromCountry(268).HavingPhoneNumber(76000000))
+.WithPhoneNumber(TelephoneNumber.ForCountry(268).WithPhoneNumber(76000000))
 .WithEmailAddress(EmailAddress.Parse("john.doe@example.com"))
 .AndLocatedAt(DetailedAddress.GetBuilder()
 .InTownOrCity("Mbabane")
@@ -85,6 +85,21 @@ ContactInformation contact = ContactInformation.GetBuilder()
 .Build();
 
 Console.WriteLine($"Contact Information: {contact.PhoneNumber}, {contact.EmailAddress}, {contact.PhysicalAddress}");
+
+//create a telephone object
+TelephoneNumber tel1 = new TelephoneNumber(268, 22010000);
+
+Console.WriteLine($"Call Link: {tel1.GetCallLink()}"); // tel:+26822010000
+Console.WriteLine($"Long number: {tel1.GetLongPhoneNumber()}"); //26822010000
+
+//or use the builder
+TelephoneNumber tel2 = TelephoneNumber.ForCountry(268).WithPhoneNumber(22010000);
+Console.WriteLine($"Call Link: {tel2.GetCallLink()}"); // tel:+26822010000
+Console.WriteLine($"Long number: {tel2.GetLongPhoneNumber()}"); //26822010000
+
+//create an email object
+EmailAddress em1 = EmailAddress.Parse("jogn@gmail.com");
+
 ```
 
 Additional Notes:

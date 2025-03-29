@@ -13,7 +13,17 @@ The library contains several classes related to communication information within
 2. EswatiniTelNumber:
    Inherits from TelephoneNumber and specifically handles phone numbers for Eswatini.
    Validates phone numbers based on specific ranges for landlines and mobile numbers.
-   Has a factory method for emergency numbers with additional validation.
+  
+    EmergencyTelephoneNumber:
+    TelephoneNumber specifically for Emergency numbers - short - where the country code may not be that important.
+    e.g. 112, 999  etc. 
+
+    ```c#
+     var oneonetwo = new EmergencyTelephoneNumber(112);
+     Console.WriteLine(ononetwo.GetCallLink()); //Outputs: tel:112
+
+     Console.WriteLine(oneonetwo.GetLongPhoneNumber()); //Outputs 112
+    ```
 
 
 3. EmailAddress:
@@ -47,3 +57,23 @@ The library contains several classes related to communication information within
 These snippets demonstrate the Sisusa Information Library's focus on data integrity and well-structured classes for representing communication information.
 
 ## Usage Examples
+```c#
+ //expects 1st param to be country code
+  var phone = new TelephoneNumber(268, 76543210);
+  Console.WriteLine(phone.GetCallLink()); // Outputs: tel:+26876543210
+  Console.WriteLine(phone.ToPrettyString()); // Outputs: +268 7654 3210
+  Console.WriteLine(phone.Equals(new TelephoneNumber(268, 76543210))); // Outputs: True
+  Console.WriteLine(phone.Equals(new TelephoneNumber(268, 76543211))); // Outputs: False
+
+  Console.WriteLine(phone.GetInInternationalNumberFormat()); //Outputs +26876543210
+
+  //can also be instantiated using the builder/factory
+  var phone2 = TelephoneNumber.ForCountry(260).WithPhoneNumber(77102580);
+
+  //defined operators so that 
+  Console.WriteLine(phone == new TelephoneNumber(268, 76543210)); //Outputs true
+
+  //error
+  var phone3 = new TelephoneNumber(24040123, 268); //swapped country code and number
+  //will throw exception
+```
