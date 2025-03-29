@@ -59,6 +59,9 @@ namespace Sisusa.Information.Communication
         /// <returns>True if the format is valid; otherwise, false.</returns>
         protected static bool IsValidFormat(uint country, ulong phoneNumber)
         {
+            if (country == 0 && phoneNumber == 0)
+                return true; //
+
             if (country is < 1 or > 999) return false;
             return phoneNumber.ToString().TrimStart('+').Length <= 12;
         }
