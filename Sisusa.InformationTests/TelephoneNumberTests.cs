@@ -141,6 +141,23 @@ namespace Sisusa.People.Tests
             });
         }
 
+        [TestMethod]
+        public void JSON_SerializesCorrectly()
+        {
+            var telephone = TelephoneNumber.ForCountry(1).WithPhoneNumber(123456789);
+            var json = System.Text.Json.JsonSerializer.Serialize(telephone);
+            Assert.AreEqual("{\"CountryCode\":1,\"PhoneNumber\":123456789}", json);
+        }
+
+
+        [TestMethod]
+        public void JSON_DeserializesCorrectly()
+        {
+            var json = "{\"CountryCode\":1,\"PhoneNumber\":123456789}";
+            var telephone = System.Text.Json.JsonSerializer.Deserialize<TelephoneNumber>(json);
+            Assert.AreEqual("+1123456789", telephone.ToString());
+        }
+
         // Helper method to access the protected IsValidFormat
         private static bool TestIsValidFormat(uint country, ulong phoneNumber)
         {

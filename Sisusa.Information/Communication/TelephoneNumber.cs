@@ -37,6 +37,11 @@ namespace Sisusa.Information.Communication
             return ToString();
         }
 
+        public override string InInternationalFormat()
+        {
+            return ToString();
+        }
+
         /// <summary>
         /// Returns a call link for the telephone number.
         /// </summary>
@@ -141,13 +146,14 @@ namespace Sisusa.Information.Communication
             return !(a == b);
         }
 
-        
+
         /// <summary>
         /// Creates a new telephone number instance from the given params.
         /// Expects phone number to follow the international phone number standard.
         /// </summary>
         /// <param name="countryCode">The country code for the phone number.(Identifies the country in which number is registered)</param>
         /// <param name="phoneNumber">The phone number which combines the area code and subscriber number(where applicable)</param>
+        //[JsonConstructor]
         public TelephoneNumber(uint countryCode, ulong phoneNumber)
         {
             ArgumentOutOfRangeException.ThrowIfLessThan(phoneNumber, countryCode);
@@ -159,8 +165,8 @@ namespace Sisusa.Information.Communication
             PhoneNumber = phoneNumber;
         }
         
-        [JsonConstructor]
-        private TelephoneNumber(uint countryCode, ulong phoneNumber, bool _):this(countryCode, phoneNumber){}
+        //[JsonConstructor]
+      //  private TelephoneNumber(uint countryCode, ulong phoneNumber):this(countryCode, phoneNumber){}
 
         /// <summary>
         /// Creates a <see cref="TelNumberBuilder"/> for the specified country code.

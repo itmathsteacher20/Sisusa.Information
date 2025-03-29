@@ -11,6 +11,12 @@ public abstract class TelephoneNumberBase
     /// </summary>
     /// <returns></returns>
     public abstract string GetInInternationalNumberFormat();
+
+    /// <summary>
+    /// The telephone number in international number format -  country code is included.
+    /// </summary>
+    /// <returns>Representation of the telNumber in international format - with countrycode</returns>
+    public abstract string InInternationalFormat();
     
     /// <summary>
     /// Generates a 'tel:' link that when clicked should dial the wrapped phone number.

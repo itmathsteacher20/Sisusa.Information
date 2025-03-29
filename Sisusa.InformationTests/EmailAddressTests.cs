@@ -2,6 +2,7 @@
 using Sisusa.People;
 using System;
 using Sisusa.Information.Communication;
+using Newtonsoft.Json;
 
 namespace Sisusa.People.Tests
 {
@@ -183,6 +184,22 @@ namespace Sisusa.People.Tests
                 .TryBuild();
 
             Assert.IsTrue(email1 != email2);
+        }
+
+        [TestMethod]
+        public void TestJSON_Ctor_SerializesAndDeserializes()
+        {
+            // Arrange
+            var email = EmailAddress.BuildAddress
+                .WithUserName("john.doe")
+                .OnHost("example.com")
+                .TryBuild();
+            // Act
+            var json = JsonConvert.SerializeObject(email);
+            Console.WriteLine(json);
+            var deserializedEmail = JsonConvert.DeserializeObject<EmailAddress>(json);
+            // Assert
+            Assert.AreEqual(email, deserializedEmail);
         }
     }
 }

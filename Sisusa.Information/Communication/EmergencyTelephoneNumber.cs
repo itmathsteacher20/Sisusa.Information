@@ -21,6 +21,11 @@ public class EmergencyTelephoneNumber : TelephoneNumberBase, IEquatable<Emergenc
         return _number.ToString();
     }
 
+    public override string InInternationalFormat()
+    {
+        return ToString();
+    }
+
     public override string GetCallLink()
     {
         return $"tel:{_number}";

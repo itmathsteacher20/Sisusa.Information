@@ -23,15 +23,18 @@ namespace Sisusa.Information.Communication
         /// </summary>
         public string EmailHost { get; init; }
 
+        [JsonIgnore]
+        public string Email => $"{UserName}@{EmailHost}";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="EmailAddress"/> class.
         /// </summary>
-        /// <param name="userPart">The user part of the email address.</param>
-        /// <param name="domainName">The domain part of the email address.</param>
-        private EmailAddress(string userPart, string domainName)
+        /// <param name="userName">The user part of the email address.</param>
+        /// <param name="emailHost">The domain part of the email address.</param>
+        private EmailAddress(string userName, string emailHost)
         {
-            UserName = userPart;
-            EmailHost = domainName;
+            UserName = userName;
+            EmailHost = emailHost;
         }
 
         /// <summary>
