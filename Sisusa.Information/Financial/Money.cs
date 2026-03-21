@@ -8,7 +8,7 @@ namespace Sisusa.Information.Financial;
 /// </summary>
 /// <param name="cents">The amount in cents.</param>
 /// <param name="currency">The currency of the money.</param>
-public class Money(int cents, Currency currency = Currency.ZAR) : IEquatable<Money>
+public class Money(int cents, Currency currency = Currency.ZAR) : IEquatable<Money>, IComparable<Money>
 {
     /// <summary>
     /// Gets the amount in cents.
@@ -304,6 +304,21 @@ public class Money(int cents, Currency currency = Currency.ZAR) : IEquatable<Mon
         {
             throw new InvalidOperationException(message);
         }
+    }
+
+    public int CompareTo(Money? other)
+    {
+        if (ReferenceEquals(this, other))
+            return 0;
+
+        if (other is null)
+            return 1;
+
+        if (Currency != other?.Currency)
+        {
+            throw new InvalidOperationException("Cannot compare monies of different currencies. Convert to same currency first.");
+        }
+        return InCents.CompareTo(other.InCents);
     }
 }
 
