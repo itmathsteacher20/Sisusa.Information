@@ -20,6 +20,7 @@
         /// </summary>
         public TimeSpan Duration => End.Subtract(Start);
 
+
         /// <summary>
         /// Determines whether the specified date is within the date range.
         /// </summary>
@@ -136,7 +137,7 @@
         /// </summary>
         public class DateRangeBuilder
         {
-            private DateTime _start;
+            private readonly DateTime _start;
 
             /// <summary>
             /// Initializes a new instance of the DateRangeBuilder class with the specified start date.
